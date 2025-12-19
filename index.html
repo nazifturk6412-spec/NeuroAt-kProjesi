@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2E7D32">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>NEURO-ATIK - Akıllı Atık Yönetimi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Telefon Çerçevesi -->
+    <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-status-bar">
+            <span class="status-time">14:30</span>
+            <div class="status-icons">
+                <span class="status-icon">📶</span>
+                <span class="status-icon">📶</span>
+                <span class="status-icon">🔋</span>
+            </div>
+        </div>
+        
+        <!-- Ana Container -->
+        <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">♻️</div>
+                    <div class="logo-text">
+                        <h1>NEURO-ATIK</h1>
+                        <p>Akıllı Atık Yönetimi</p>
+                    </div>
+                </div>
+                <div class="user-section">
+                    <div class="user-info">
+                        <span class="user-name">Kullanıcı</span>
+                        <div class="eco-points">
+                            <span class="points-icon">🌱</span>
+                            <span class="points-value" id="totalPoints">0</span>
+                            <span class="points-label">Eko-Puan</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Ana İçerik -->
+        <main class="app-main">
+            <!-- Ödül Hedefi Kartı -->
+            <section class="reward-section">
+                <div class="card reward-card">
+                    <div class="reward-content">
+                        <div class="reward-icon">☕</div>
+                        <div class="reward-info">
+                            <h3 class="reward-title">Ücretsiz Kahve Hedefi</h3>
+                            <p class="reward-subtitle">
+                                <span id="remainingPoints">250</span> Puan Kaldı
+                            </p>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="rewardProgressBar">
+                                    <div class="progress-fill" id="rewardProgressFill"></div>
+                                </div>
+                                <span class="progress-text" id="progressText">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Harita Bölümü - Ana Ekranda -->
+            <section class="map-section">
+                <div class="card map-card">
+                    <div class="card-header">
+                        <h3>📍 Akıllı Atık Kutuları</h3>
+                        <p>A Okulu Çevresi</p>
+                    </div>
+                    <div id="map" class="map-container"></div>
+                    <div class="map-legend">
+                        <div class="legend-item">
+                            <span class="legend-icon">♻️</span>
+                            <span class="legend-text">Akıllı Atık Kutusu</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-icon">🏫</span>
+                            <span class="legend-text">A Okulu</span>
+                        </div>
+                    </div>
+                    <!-- Doluluk Oranlı Kutu Listesi -->
+                    <div class="bin-list-container">
+                        <h4 class="bin-list-title">Kutu Doluluk Durumu</h4>
+                        <div class="bin-list" id="binList">
+                            <!-- JavaScript ile doldurulacak -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QR Kod Okutma Bölümü -->
+            <section class="qr-section">
+                <div class="card qr-card">
+                    <div class="card-header">
+                        <h2>QR Kod Okut</h2>
+                        <p>Atık kutusundaki QR kodu okutarak puan kazan</p>
+                    </div>
+                    <div class="qr-scanner-container">
+                        <div class="camera-container" id="cameraContainer">
+                            <video id="video" autoplay playsinline></video>
+                            <canvas id="canvas" style="display: none;"></canvas>
+                            <div class="scanner-overlay">
+                                <div class="scanner-frame"></div>
+                                <p class="scanner-hint">QR kodu kare içine hizalayın</p>
+                            </div>
+                        </div>
+                        <div class="camera-controls">
+                            <button class="btn btn-primary" id="startCameraBtn">
+                                <span class="btn-icon">📷</span>
+                                Kamerayı Aç
+                            </button>
+                            <button class="btn btn-secondary" id="stopCameraBtn" style="display: none;">
+                                <span class="btn-icon">⏸️</span>
+                                Durdur
+                            </button>
+                        </div>
+                        <div class="manual-input">
+                            <p class="divider">veya</p>
+                            <input type="text" id="manualQRInput" placeholder="QR kod numarasını girin" class="input-field">
+                            <button class="btn btn-outline" id="manualSubmitBtn">Gönder</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Puan Kazanma Bildirimi -->
+            <div class="notification" id="notification" style="display: none;">
+                <div class="notification-content">
+                    <div class="notification-icon">✅</div>
+                    <div class="notification-text">
+                        <h3 id="notificationTitle">Puan Kazandınız!</h3>
+                        <p id="notificationMessage">+10 Eko-Puan</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- İstatistikler -->
+            <section class="stats-section">
+                <div class="card stats-card">
+                    <h3>İstatistikler</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item clickable" data-stat="tree">
+                            <div class="stat-icon">🌳</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="savedTrees">0</span>
+                                <span class="stat-label">Kurtarılan Ağaç</span>
+                            </div>
+                        </div>
+                        <div class="stat-item clickable" data-stat="water">
+                            <div class="stat-icon">💧</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="savedWater">0</span>
+                                <span class="stat-label">Su Tasarrufu</span>
+                            </div>
+                        </div>
+                        <div class="stat-item clickable" data-stat="energy">
+                            <div class="stat-icon">⚡</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="savedEnergy">0</span>
+                                <span class="stat-label">Enerji Tasarrufu</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Atık Kategorileri -->
+            <section class="categories-section">
+                <div class="card categories-card">
+                    <h3>Atık Kategorileri</h3>
+                    <div class="categories-grid">
+                        <div class="category-item" data-category="plastic">
+                            <div class="category-icon">🥤</div>
+                            <span class="category-name">Plastik</span>
+                            <span class="category-count" id="plasticCount">0</span>
+                        </div>
+                        <div class="category-item" data-category="glass">
+                            <div class="category-icon">🍾</div>
+                            <span class="category-name">Cam</span>
+                            <span class="category-count" id="glassCount">0</span>
+                        </div>
+                        <div class="category-item" data-category="metal">
+                            <div class="category-icon">🥫</div>
+                            <span class="category-name">Metal</span>
+                            <span class="category-count" id="metalCount">0</span>
+                        </div>
+                        <div class="category-item" data-category="paper">
+                            <div class="category-icon">📄</div>
+                            <span class="category-name">Kağıt</span>
+                            <span class="category-count" id="paperCount">0</span>
+                        </div>
+                        <div class="category-item" data-category="cardboard">
+                            <div class="category-icon">📦</div>
+                            <span class="category-name">Karton</span>
+                            <span class="category-count" id="cardboardCount">0</span>
+                        </div>
+                        <div class="category-item" data-category="general">
+                            <div class="category-icon">🗑️</div>
+                            <span class="category-name">Genel Çöp</span>
+                            <span class="category-count" id="generalCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Son Aktiviteler -->
+            <section class="activity-section">
+                <div class="card activity-card">
+                    <h3>Son Aktiviteler</h3>
+                    <div class="activity-list" id="activityList">
+                        <div class="empty-state">
+                            <span class="empty-icon">📋</span>
+                            <p>Henüz aktivite yok</p>
+                            <p class="empty-hint">QR kod okutarak başlayın!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-page="home">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Ana Sayfa</span>
+            </button>
+            <button class="nav-item" data-page="scan">
+                <span class="nav-icon">📷</span>
+                <span class="nav-label">QR Okut</span>
+            </button>
+            <button class="nav-item" data-page="stats">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">İstatistikler</span>
+            </button>
+            <button class="nav-item" data-page="profile">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profil</span>
+            </button>
+        </nav>
+        </div>
+    </div>
+
+    <!-- QR Kod Okuma Kütüphanesi -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <!-- Leaflet Harita Kütüphanesi -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
